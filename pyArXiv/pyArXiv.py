@@ -22,7 +22,7 @@ class pyArXiv:
         paper_id = paper_info["paper_id"]
 
         url = "https://arxiv.org/pdf/{}.pdf".format(paper_id)
-        pdf_name = "{}.pdf".format(paper_name).replace(' ', '_')
+        pdf_name = "{}.pdf".format(paper_name).replace(' ', '_').replace(':', '_')
 
         urllib.request.urlretrieve(url, "{}".format(pdf_name))  # TODO: directory select feature
 
