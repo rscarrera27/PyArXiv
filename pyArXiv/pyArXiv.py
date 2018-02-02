@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
+import urllib.request
 
 
 class pyArXiv:
@@ -9,6 +10,7 @@ class pyArXiv:
 
     @staticmethod
     def download(paper_info):
+
         """
         :param paper_info: {
                             "paper_id": int,
@@ -16,8 +18,17 @@ class pyArXiv:
                             }
         :return: None
         """
+        paper_name = paper_info["paper_name"][1:]  # remove newline character by str slicing
+        paper_id = paper_info["paper_id"]
+
+        url = "https://arxiv.org/pdf/{}.pdf".format(paper_id)
+        pdf_name = "{}.pdf".format(paper_name).replace(' ', '_')
+
+        urllib.request.urlretrieve(url, "{}".format(pdf_name))  # TODO: directory select feature
+
     @staticmethod
     def query(paper_id):
+
         """
         :param paper_id: int
         :return: {
@@ -32,7 +43,6 @@ class pyArXiv:
             return ValueError
 
         paper_name = str(list(BeautifulSoup(html.text, 'html.parser').find("h1", "title mathjax"))[1])
-        print(paper_name)
 
         paper_info = {
             "paper_id": paper_id,
@@ -40,8 +50,3 @@ class pyArXiv:
         }
 
         return paper_info
-
-
-
-ad = pyArXiv
-ad.query("1412.0035")
