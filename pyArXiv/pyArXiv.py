@@ -5,9 +5,6 @@ import urllib.request
 
 class pyArXiv:
 
-    def __init__(self):
-        pass
-
     @staticmethod
     def download(paper_info):
 
