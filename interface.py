@@ -1,4 +1,4 @@
-from pyArXiv.pyArXiv import pyArXiv
+from improved_arxiv.pyArXiv import pyArXiv
 
 print("Thanks for using pyArXiv!\n\n")
 paper_id = input("paper id : ")
