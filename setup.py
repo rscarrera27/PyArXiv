@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='improved_ArXiv',
-    version='0.0.2',
+    version='0.0.3',
     description='ArXiv paper downloader',
     license='bbakbbak2',
     author='Lewis Kim',
@@ -11,5 +11,9 @@ setup(
     keywords=['ArXiv', 'parsing', 'downloader'],
     install_requires=[],
     packages=find_packages(exclude=['tests', 'interface.py']),
-    zip_safe=False
+    zip_safe=False,
+    requires=[
+        "requests",
+        "bs4"
+    ]
 )
