@@ -3,25 +3,27 @@ import requests
 import urllib.request
 
 
-class pyArXiv:
+class Paper:
+
+    def __init__(self, paper_name, paper_id, authors, abstract):
+        self.paper_name = paper_name
+        self.paper_id = paper_id
+        self.authors = authors
+        self.abstract = abstract
+
+    def download(self):
+        url = "https://arxiv.org/pdf/{}.pdf".format(self.paper_id)
+        pdf_name = "{}.pdf".format(self.paper_name).replace(' ', '_').replace(':', '')
+
+        urllib.request.urlretrieve(url, "{}".format(pdf_name))
+
+
+class ArXiv:
+
 
     @staticmethod
-    def download(paper_info):
-
-        """
-        :param paper_info: {
-                            "paper_id": int,
-                            "paper_name": str
-                            }
-        :return: None
-        """
-        paper_name = paper_info["paper_name"][1:]  # remove newline character by str slicing
-        paper_id = paper_info["paper_id"]
-
-        url = "https://arxiv.org/pdf/{}.pdf".format(paper_id)
-        pdf_name = "{}.pdf".format(paper_name).replace(' ', '_').replace(':', '_')
-
-        urllib.request.urlretrieve(url, "{}".format(pdf_name))  # TODO: directory select feature
+    def download(paper):
+        paper.download()
 
     @staticmethod
     def query(paper_id):
@@ -39,11 +41,15 @@ class pyArXiv:
         if html.status_code != 200:
             return ValueError
 
-        paper_name = str(list(BeautifulSoup(html.text, 'html.parser').find("h1", "title mathjax"))[1])
+        html = BeautifulSoup(html.text, 'html.parser')
 
-        paper_info = {
-            "paper_id": paper_id,
-            "paper_name": paper_name
-        }
+        paper_name = str(list(html.find("h1", "title mathjax"))[1])[1:]
+        authors = [name.text for name in html.find("div", "authors").find_all("a")]
+        abstract = str(list(html.find("blockquote", "abstract mathjax"))[2])
 
-        return paper_info
+        paper = Paper(paper_name=paper_name,
+                      paper_id=paper_id,
+                      authors=authors,
+                      abstract=abstract)
+
+        return paper
